@@ -28,7 +28,15 @@ echo 'If the folder $HOME/.letsencrypt_webfaction already exists then you most p
 echo '(Yes / No)'
 echo ""
 read -r response
-if [[ $response =~ ^([nN][oO]|[nN])$ ]]; then
+if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
+    echo "OK, lets get started"
+      sleep 2
+      ./lazygetdata
+sleep 5
+echo "Press any key to finish"
+read any_key && exit 2>/dev/null &
+  fi
+if ! $CONTINUE; then
 echo "OK not a problem, lets do it now"
 echo "Firstly, I will make a back up of your ~/.bash_profile called ~/.bash_profilebackup"
 cp ~/.bash_profile ~/.bash_profilebackup

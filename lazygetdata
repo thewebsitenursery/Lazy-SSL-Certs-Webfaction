@@ -36,7 +36,7 @@ echo ''
 echo "Certificates will be generated for $the_domain & wwww.$the_domain"
 echo ""
 sleep 2
-echo '"Lastly what is the application name in your Webfaction webapps directory? ie. ~/webapps/"my_app_name"' 
+echo '"Lastly what is the application name in your Webfaction webapps directory? ie. ~/webapps/"my_app_name"'
 read my_app_name
 mkdir -p ~/webapps/$my_app_name/publicdir
 echo ""
@@ -51,7 +51,7 @@ echo "#  After certificates are installed by webfaction you can delete the folde
 echo "#                                                                               #"
 echo "#################################################################################"
 sleep 2
-echo "" 
+echo ""
 echo ""
 echo "Please confirm the data for $the_domain is correct as, it will run like so:"
 echo ""
@@ -73,4 +73,3 @@ echo""
 Sleep 2
 exit 2>/dev/null &
 fi
-
