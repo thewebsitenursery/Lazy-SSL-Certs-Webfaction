@@ -1,0 +1,76 @@
+#!/bin/bash
+
+# Adding even more automation to the quite brilliant letsencrypt-webfaction script
+# Original letsencrypt-webfaction script by https://github.com/will-in-wi/letsencrypt-webfaction
+
+# This little addition by thewebsitenursery.com https://github.com/thewebsitenursery
+
+# Set continue to false by default
+
+CONTINUE=false
+
+# Clear the screen and ask some questions
+
+clear
+
+# Information Gathering
+echo ''
+echo 'Letsencrypt-webfaction automates Free SSL certification from letsencrypt for example.com & wwww.example.com hosted on Webfaction'
+echo ''
+echo "To run letsencrypt-webfaction you need to have 3 pieces of information"
+echo ''
+echo "Your preferred email address, the name of your app and its domain name"
+echo ''
+sleep 2
+echo "Firstly, what email address do you want the certification confirmation to be sent?"
+read account_email
+echo ''
+echo "Webfaction Support will be sent the Letsencrypt certificates install, confirmation will be sent to: $account_email"
+echo ''
+sleep 2
+echo "Secondly, what is the domain are you securing?"
+echo ''
+echo 'PLEASE NOTE: "example.com" creates certificates for "example.com" and "www.example.com""
+read the_domain
+echo ''
+echo "Certificates will be generated for $the_domain & wwww.$the_domain"
+echo ""
+sleep 2
+echo '"Lastly what is the application name in your Webfaction webapps directory? ie. ~/webapps/"my_app_name"' 
+read my_app_name
+mkdir -p ~/webapps/$my_app_name/publicdir
+echo ""
+echo "#############################   PLEASE NOTE   ###################################"
+echo "#################################################################################"
+echo "#                                                                               #"
+echo "#  A new directory has been created $the_domain/publicdir                       #"
+echo "#                                                                               #"
+echo "#  Letsencrypt will use code in the directory to confirm ownership              #"
+echo "#  If you delete the folder the certificates will not be generated              #"
+echo "#  After certificates are installed by webfaction you can delete the folder 	  #"
+echo "#                                                                               #"
+echo "#################################################################################"
+sleep 2
+echo "" 
+echo ""
+echo "Please confirm the data for $the_domain is correct as, it will run like so:"
+echo ""
+echo "letsencrypt_webfaction --account $account_email --domains $the_domain,www.$the_domain --public ~/webapps/$my_app_name/publicdir/"
+echo ""
+echo "Is the information above correct? Yes/No?"
+echo ""
+read -r response
+if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
+echo "ok, here we go"
+echo ""
+letsencrypt_webfaction --account $account_email --domains $the_domain,www.$the_domain --public ~/webapps/$my_app_name/publicdir/
+fi
+if ! $CONTINUE; then
+rm -rf ~/webapps/$my_app_name/publicdir && echo "OK, No problem, the directory at $the_domain/public_dir has been deleted"
+echo ""
+echo "Please try again if needed"
+echo""
+Sleep 2
+exit 2>/dev/null &
+fi
+
