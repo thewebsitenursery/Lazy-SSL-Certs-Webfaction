@@ -30,13 +30,13 @@ echo ''
 sleep 2
 echo "Secondly, what is the domain are you securing?"
 echo ''
-echo 'PLEASE NOTE: "example.com" creates certificates for "example.com" and "www.example.com""
+echo 'PLEASE NOTE: "example.com" creates certificates for example.com and www.example.com'
 read the_domain
 echo ''
 echo "Certificates will be generated for $the_domain & wwww.$the_domain"
 echo ""
 sleep 2
-echo '"Lastly what is the application name in your Webfaction webapps directory? ie. ~/webapps/"my_app_name"'
+echo 'Lastly what is the application name in your Webfaction webapps directory? ie. ~/webapps/my_app_name'
 read my_app_name
 mkdir -p ~/webapps/$my_app_name/publicdir
 echo ""
@@ -70,6 +70,6 @@ rm -rf ~/webapps/$my_app_name/publicdir && echo "OK, No problem, the directory a
 echo ""
 echo "Please try again if needed"
 echo""
-Sleep 2
+sleep 2
 exit 2>/dev/null &
 fi
