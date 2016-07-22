@@ -1,0 +1,106 @@
+#!/bin/bash
+
+# Lazysslcertsonwebfaction
+# This adds even more automation to the quite brilliant letsencrypt-webfaction script
+# Completely automating the process of generaing, comfirming and installing SSL Certificates from Letsencrypy / Certbot.
+# Certificates will be installed for example.com & www.example.com from the given domain example.com
+# Original letsencrypt-webfaction by https://github.com/will-in-wi/letsencrypt-webfaction
+# This little addition by thewebsitenursery.com https://github.com/thewebsitenursery
+
+# The only assumption I make is that you have a ~/bash_profile
+# if you dont then simply type "touch ~/.bash_profile" before running this script
+
+##############################################################################
+
+# Set continue to false by default
+
+CONTINUE=false
+
+# Clear the screen and ask some questions
+
+clear
+
+# Install Base letsencrypt-webfaction script if not done so already
+
+echo ''
+echo 'Have you already installed the base letsencrypt-webfaction script to your webfaction $HOME folder?'
+echo 'If the folder $HOME/.letsencrypt_webfaction already exists then you most probably have'
+echo '(Yes / No)'
+echo ""
+read -r response
+if [[ $response =~ ^([nN][oO]|[nN])$ ]]; then
+echo "OK not a problem, lets do it now"
+echo "Firstly, I will make a back up of your ~/.bash_profile called ~/.bash_profilebackup"
+cp ~/.bash_profile ~/.bash_profilebackup
+echo "Creating the folder .letsencrypt_webfaction and installing the base script using ruby gems"
+GEM_HOME=$HOME/.letsencrypt_webfaction/gems RUBYLIB=$GEM_HOME/lib gem2.2 install letsencrypt_webfaction
+echo ''
+sleep 2
+echo"Adding some lines to your ~/.bash_profile"
+echo -e ' \n \n # This is the letsencrypt_webfaction PATH information \n \n function letsencrypt_webfaction { \n PATH=$PATH:$GEM_HOME/bin GEM_HOME=$HOME/.letsencrypt_webfaction/gems RUBYLIB=$GEM_HOME/lib ruby2.2 \n $HOME/.letsencrypt_webfaction/gems/bin/letsencrypt_webfaction $* \n } \n \n' >> ~/.bash_profile
+echo ""
+echo "Ok all done"
+if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
+echo ""
+echo "OK, lets get started"
+fi
+sleep 1
+echo ''
+echo 'Letsencrypt-webfaction automates certification from Letsencrypt'
+echo 'for example.com & wwww.example.com for webapps hosted on Webfaction'
+echo ''
+echo "To base letsencrypt-webfaction script needs just 3 pieces of information"
+echo ''
+echo "Your email address, the name of your app in your ~/webapps folder & the domain name."
+echo ''
+sleep 2
+echo "Firstly, what email address do you want the certification confirmation to be sent?"
+read account_email
+echo ''
+echo "Webfaction Support will be sent the Letsencrypt certificates to install, confirmation will be sent to: $account_email"
+echo ''
+sleep 2
+echo "Secondly, what is the domain? ie. example.com"
+echo ''
+echo 'REMEMBER: "example.com" creates certificates for example.com and www.example.com'
+read the_domain
+echo ''
+echo "Certificates will be generated for $the_domain & wwww.$the_domain"
+echo ""
+sleep 2
+echo 'Lastly, what is the applications name in your webapps directory ie. ~/webapps/my_app_name'
+read my_app_name
+mkdir -p ~/webapps/$my_app_name/publicdir
+echo ""
+echo "#############################   PLEASE NOTE   ###################################"
+echo "#################################################################################"
+echo "#                                                                               #"
+echo "#  A new directory has been created at $the_domain/publicdir                    #"
+echo "#                                                                               #"
+echo "#  Letsencrypt will use code in the directory to confirm ownership              #"
+echo "#  If you delete the folder the certificates will not be generated              #"
+echo "#  After certificates are installed by webfaction you can delete the folder 	  #"
+echo "#                                                                               #"
+echo "#################################################################################"
+sleep 2
+echo ""
+echo "Please confirm the data for $the_domain is correct as, it will run like so:"
+echo ""
+echo "letsencrypt_webfaction --account $account_email --domains $the_domain,www.$the_domain --public ~/webapps/$my_app_name/publicdir/"
+echo ""
+echo "Is the information above correct? Yes/No?"
+echo ""
+read -r response
+if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
+echo "ok, here we go"
+echo ""
+letsencrypt_webfaction --account $account_email --domains $the_domain,www.$the_domain --public ~/webapps/$my_app_name/publicdir/
+fi
+if ! $CONTINUE; then
+rm -rf ~/webapps/$my_app_name/publicdir && echo "OK, No problem, the directory at $the_domain/public_dir has been deleted"
+echo ""
+echo "Please try again if needed"
+echo""
+Sleep 2
+exit 2>/dev/null &
+fi
